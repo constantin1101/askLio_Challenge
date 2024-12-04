@@ -23,7 +23,7 @@
         /* Center container for all content */
         .container {
             width: 100%;
-            max-width: 1200px; /* Set a max width */
+            max-width: 1500px; /* Set a max width */
             margin: 0 auto;
             padding: 20px;
         }
@@ -98,6 +98,13 @@
         td {
             background-color: #1E1E1E;
             color: #ffffff;
+        }
+
+        /* Make the "Order Lines" column wider */
+        td:nth-child(8), th:nth-child(8) {
+            min-width: 200px; /* Set a minimum width */
+            max-width: 200px; /* Optional maximum width */
+            word-wrap: break-word; /* Wrap text if it exceeds the width */
         }
 
         select {
@@ -238,7 +245,7 @@
                         <th>Commodity ID</th>
                         <th>Commodity Category</th>
                         <th>Commodity Group</th>
-                        <th>Order Lines</th>
+                        <th>Order Lines (Unit Price, Amount, Unit)</th>
                         <th>Total Cost</th>
                         <th>Department</th>
                         <th>Status</th>
@@ -254,7 +261,7 @@
                         <td>{{ row["Commodity ID"] }}</td>
                         <td>{{ row["Commodity Category"] }}</td>
                         <td>{{ row["Commodity Group"] }}</td>
-                        <td>{{ row["Order Lines"] }}</td>
+                        <td>{{ row["Order Lines (Unit Price, Amount, Unit)"] }}</td>
                         <td>{{ row["Total Cost"] }}</td>
                         <td>{{ row["Department"] }}</td>
                         <td>
