@@ -1,0 +1,50 @@
+Scan the following German document and extract the specified data points accurately. Focus on the following instructions:
+
+1. **Requestor Information**:
+   - Locate the name from the recipient address block, typically found at the top left or top of the page.
+   - The requestor name is below the company name, which is usually "Lio Technologies GmbH."
+
+2. **Document Title/Description**:
+   - Identify the title or short description of the procurement request.
+
+3. **Vendor Details**:
+   - Extract the vendor company name, usually found in the letterhead (top right of the page).
+   - Locate the VAT ID, typically found at the bottom of the document, near or next to "USt-IdNr."
+
+4. **Department Details**:
+   - Search for department identifiers within the document, usually in the recipient address block.
+   - If no department is explicitly mentioned, return "HR" as the default.
+
+5. **Order Information**:
+   - Analyze the line items table to extract:
+     * Item descriptions
+     * Quantity/Amount
+     * Unit of measure
+     * Unit price
+     * Total price per line
+   - Include any alternative items if listed.
+
+6. **Total Cost**:
+   - Find the total cost, including taxes and fees, labeled with terms like "Gesamtbetrag" or "Gesamtsumme." 
+   - Ensure this value represents the full amount inclusive of all charges.
+
+**Output Format**:
+Return a JSON object structured exactly as shown below. Include no additional text or formatting.
+
+{
+    "requestor_name": "string",
+    "title": "string",
+    "vendor_name": "string",
+    "vat_id": "string",
+    "commodity_group": "string",
+    "order_lines": [
+        {
+            "position_description": "string",
+            "unit_price": float,
+            "amount": float,
+            "unit": "string"
+        }
+    ],
+    "total_cost": float,
+    "department": "string"
+}

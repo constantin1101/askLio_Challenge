@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Extraction Result</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1, h2 {
+            color: #4950ff;
+            text-align: center;
+        }
+
+        /* Center container for all content */
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Preformatted text styles */
+        pre {
+            background-color: #1E1E1E;
+            padding: 15px;
+            border-radius: 10px;
+            color: #ffffff;
+            overflow-x: auto; /* Allow horizontal scrolling for long content */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Back link */
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: #4950ff;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        a:hover {
+            background-color: #4950ff;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 480px) {
+            h1, h2 {
+                font-size: 18px;
+            }
+
+            pre {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            a {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Extraction Result</h1>
+        
+        <h2>Extracted Data</h2>
+        <pre>{{ data }}</pre>
+        
+        <h2>Identified Commodity</h2>
+        <pre>{{ commodity }}</pre>
+        
+        <a href="/">Go Back</a>
+    </div>
+</body>
+</html>

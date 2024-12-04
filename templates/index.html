@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Procurement Request Processor</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1, h2 {
+            color: #4950ff;
+            text-align: center;
+        }
+
+        /* Center container for all content */
+        .container {
+            width: 100%;
+            max-width: 1200px; /* Set a max width */
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Upload form styles */
+        form {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #1E1E1E;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%; /* Full width of the container */
+        }
+
+        label {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: none;
+            background-color: #2B2B2B;
+            color: #ffffff;
+            width: 90%;
+            max-width: 300px; /* Limit width of the input */
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: #4950ff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4950ff;
+        }
+
+        /* Table styles */
+        .table-container {
+            width: 100%;
+            overflow-x: auto; /* Add horizontal scrolling for large tables */
+            background-color: #1E1E1E;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #2B2B2B;
+        }
+
+        th {
+            background-color: #2B2B2B;
+            color: #ffffff;
+        }
+
+        td {
+            background-color: #1E1E1E;
+            color: #ffffff;
+        }
+
+        select {
+            padding: 8px;
+            font-size: 14px;
+            background-color: #2B2B2B;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+        }
+
+        /* Dynamic styles based on status */
+        select.status-open {
+            background-color: #4950ff; /* Blue for "Open" */
+        }
+
+        select.status-in-progress {
+            background-color: #FFC107; /* Yellow for "In Progress" */
+            color: #000000; /* Black text for contrast */
+        }
+
+        select.status-closed {
+            background-color: #6C757D; /* Grey for "Closed" */
+        }
+
+        select:focus {
+            outline: none;
+            box-shadow: 0px 0px 6px #4950ff; /* Subtle glow for focus */
+        }
+
+        tr:hover td {
+            background-color: #333333;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            th, td {
+                padding: 6px;
+                font-size: 10px;
+            }
+
+            button {
+                font-size: 12px;
+                padding: 8px 16px;
+            }
+
+            input[type="file"] {
+                width: 100%; /* Full width for small screens */
+                max-width: 250px;
+            }
+        }
+    </style>
+    <script>
+        // Function to dynamically set the class for the select element based on the selected status
+        function updateDropdownStyle(selectElement) {
+            // Remove existing status classes
+            selectElement.classList.remove('status-open', 'status-in-progress', 'status-closed');
+    
+            // Add the appropriate class based on the selected value
+            if (selectElement.value === 'Open') {
+                selectElement.classList.add('status-open');
+            } else if (selectElement.value === 'In Progress') {
+                selectElement.classList.add('status-in-progress');
+            } else if (selectElement.value === 'Closed') {
+                selectElement.classList.add('status-closed');
+            }
+        }
+    
+        // Attach onchange event handler to update style dynamically
+        async function updateStatus(rowIndex, newStatus) {
+            const selectElement = document.querySelector(`select[data-row="${rowIndex}"]`);
+            updateDropdownStyle(selectElement);
+    
+            // Send status update to the server
+            const response = await fetch('/update_status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    rowIndex: rowIndex,
+                    status: newStatus,
+                }),
+            });
+    
+            if (response.ok) {
+                alert('Status updated successfully!');
+            } else {
+                alert('Failed to update status.');
+            }
+        }
+    
+        // Apply initial styles on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('select').forEach(function (selectElement) {
+                updateDropdownStyle(selectElement);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Procurement Request Processor</h1>
+        
+        <!-- Upload Form -->
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <label for="file">Select Vendor Offer PDF:</label>
+            <input type="file" name="file" accept="application/pdf">
+            <button type="submit">Upload</button>
+        </form>
+        
+        <h2>Uploaded Procurement Data</h2>
+        
+        <!-- Table Container -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Requestor Name</th>
+                        <th>Title</th>
+                        <th>Vendor Name</th>
+                        <th>VAT ID</th>
+                        <th>Commodity ID</th>
+                        <th>Commodity Category</th>
+                        <th>Commodity Group</th>
+                        <th>Order Lines</th>
+                        <th>Total Cost</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in csv_data %}
+                    <tr>
+                        <td>{{ row["Requestor Name"] }}</td>
+                        <td>{{ row["Title"] }}</td>
+                        <td>{{ row["Vendor Name"] }}</td>
+                        <td>{{ row["VAT ID"] }}</td>
+                        <td>{{ row["Commodity ID"] }}</td>
+                        <td>{{ row["Commodity Category"] }}</td>
+                        <td>{{ row["Commodity Group"] }}</td>
+                        <td>{{ row["Order Lines"] }}</td>
+                        <td>{{ row["Total Cost"] }}</td>
+                        <td>{{ row["Department"] }}</td>
+                        <td>
+                            <select data-row="{{ loop.index0 }}" onchange="updateStatus({{ loop.index0 }}, this.value)">
+                                <option value="Open" {% if row["Status"] == "Open" %}selected{% endif %}>Open</option>
+                                <option value="In Progress" {% if row["Status"] == "In Progress" %}selected{% endif %}>In Progress</option>
+                                <option value="Closed" {% if row["Status"] == "Closed" %}selected{% endif %}>Closed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
