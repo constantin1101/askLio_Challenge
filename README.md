@@ -1,3 +1,11 @@
+# Execution
+- Clone repository
+- $ python -m venv venv
+- $ pip install -r requirements.txt
+- $ python app.py
+- Open browser: http://127.0.0.1:5000/
+
+# Description
 # Challenge 1
 
 Please organize, design, test, and deploy your code (locally on your machine is fine) as if it were going into production. Then send us a link to the hosted repository (e.g. Github, Bitbucket...).
