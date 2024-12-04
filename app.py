@@ -107,7 +107,6 @@ def extract_information_from_text(text, key):
         )
         # Instantly add the output as a new column entry for the corresponding row
         response = completion.choices[0].message.content
-        
         return response 
 
     except openai.error.OpenAIError as e:
@@ -154,7 +153,7 @@ def save_to_csv(data, commodity):
     # Combine order lines into a single column
     order_lines_combined = "; ".join(
         [
-            f"Unit Price: {line['unit_price']}, Amount: {line['amount']}, Unit: {line['unit']}"
+            f"{line['unit_price']} - {line['amount']} {line['unit']}"
             for line in data["order_lines"]
         ]
     )
@@ -168,7 +167,7 @@ def save_to_csv(data, commodity):
         "Commodity ID": commodity["ID"],
         "Commodity Category": commodity["Category"],
         "Commodity Group": commodity["Commodity Group"],
-        "Order Lines": order_lines_combined,  # Combined order lines in a single column
+        "Order Lines (Unit Price, Amount, Unit)": order_lines_combined,  # Combined order lines in a single column
         "Total Cost": data["total_cost"],
         "Department": data["department"],
         "Status": "Open",
@@ -177,7 +176,7 @@ def save_to_csv(data, commodity):
     # Define CSV file headers
     headers = [
         "Requestor Name", "Title", "Vendor Name", "VAT ID", "Commodity ID",
-        "Commodity Category", "Commodity Group", "Order Lines", "Total Cost",
+        "Commodity Category", "Commodity Group", "Order Lines (Unit Price, Amount, Unit)", "Total Cost",
         "Department", "Status"
     ]
 
@@ -247,6 +246,8 @@ def upload_file():
     except Exception as e:
         flash(f"Error extracting structured information: {e}")
         return redirect(url_for('index'))
+    
+    print(extracted_data)  
     
     # Identify the commodity
     try:
