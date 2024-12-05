@@ -112,6 +112,15 @@ def extract_information_from_text(text, key):
     except openai.error.OpenAIError as e:
         print(f"An exception occurred: {e}")
         return None
+
+def check_procurement_request(response):
+    # Parse the JSON strings
+    response = json.loads(response)
+
+    if response['requestor_name'] and response['title'] and response['vendor_name'] and response['vat_id'] != "" and response['order_lines'] != [] and response['total_cost'] != 0.0:
+        return True
+    else:
+        return False
     
 def identify_commodity(text, commodity_dict, key):
     system_message = system_message = (
@@ -246,8 +255,11 @@ def upload_file():
     except Exception as e:
         flash(f"Error extracting structured information: {e}")
         return redirect(url_for('index'))
-    
-    print(extracted_data)  
+
+    # Check if the response contains the required fields
+    if check_procurement_request(extracted_data) == False:
+        flash('The extracted data does not contain all the required fields. Please try again.')
+        return redirect(url_for('index'))
     
     # Identify the commodity
     try:
