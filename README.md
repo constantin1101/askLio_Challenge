@@ -1,5 +1,6 @@
 # Execution
 - Clone repository
+- create .env and set OPENAI_API_KEY
 - $ python -m venv venv
 - $ pip install -r requirements.txt
 - $ python app.py
